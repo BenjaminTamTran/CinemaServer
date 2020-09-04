@@ -2,16 +2,21 @@ var Movie = require('../models/Movie');
 var helper = require('../router/helper');
 
 const createMovie = async (req, res) => {
-    // var imageName = req.files.image.originalFilename ? stringHelper.removeWeirdCharacter(req.files.image.originalFilename) : 'your_movie.png';
+    const image = req.body.type === 'ADD_MOVIE_REQUEST' ? req.body.params.image : req.body.image;
+    const name = req.body.type === 'ADD_MOVIE_REQUEST' ? req.body.params.name : req.body.name;
+    const description = req.body.type === 'ADD_MOVIE_REQUEST' ? req.body.params.description : req.body.description;
+    const startDate = req.body.type === 'ADD_MOVIE_REQUEST' ? req.body.params.startDate : req.body.startDate;
+    const endDate = req.body.type === 'ADD_MOVIE_REQUEST' ? req.body.params.endDate : req.body.endDate;
+    const userID = req.body.type === 'ADD_MOVIE_REQUEST' ? req.body.params.userID : req.body.userID;
+    const type = req.body.type === 'ADD_MOVIE_REQUEST' ? req.body.params.type : req.body.type;
     var movie = new Movie({
-        // imagePath: req.files.image.path ? req.files.image.path : 'https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png?format=jpg&quality=90&v=1530129081',
-        image: req.body.image,
-        name: req.body.name,
-        startDate: req.body.startDate,
-        endDate: req.body.endDate,
-        description: req.body.description,
-        userID: req.body.userID ? req.body.userID : '',
-        type: req.body.type ? req.body.type : '',
+        image: image,
+        name: name,
+        startDate: startDate,
+        endDate: endDate,
+        description: description,
+        userID: userID,
+        type: type,
     });
     try {
         if (await Movie.findOne({name: movie.name})) {

@@ -13,17 +13,26 @@ router.get(`/list/created/`, movieController.getCreatedMovie); // lấy danh sá
 
 // Thêm một phim mới
 router.post(`/create`, async function (req, res) {
-    if (!req.body.image || req.body.image === '' || req.body.image === constant.imagePlaceholder)
+    // console.log(`server received - body: ${JSON.stringify(req.body, null, 2)}`);
+    // console.log(`server received - header: ${JSON.stringify(req.headers, null, 2)}`);
+
+    // Because of redux-saga so if req wasnt from postman, it will have the 'type' field
+
+    const image = req.body.type === 'ADD_MOVIE_REQUEST' ? req.body.params.image : req.body.image;
+    const name = req.body.type === 'ADD_MOVIE_REQUEST' ? req.body.params.name : req.body.name;
+    const description = req.body.type === 'ADD_MOVIE_REQUEST' ? req.body.params.description : req.body.description;
+
+    if (!image || image === '' || image === constant.imagePlaceholder)
         helper.imageNotFoundError(res);
-    else if (!req.body.name || req.body.name === '')
+    else if (!name || name === '')
         helper.titleNotFoundError(res);
-    else if (!req.body.description || req.body.description === '')
+    else if (!description || description === '')
         helper.descriptionNotFoundError(res);
     else if (!req.headers.token)
         helper.unauthorizedError(res);
-    else if (req.body.image && req.body.image !== '' && req.body.image !== constant.imagePlaceholder
-                && req.body.name && req.body.name !== ""
-                && req.body.description && req.body.description !== ""
+    else if (image && image !== '' && image !== constant.imagePlaceholder
+                && name && name !== ""
+                && description && description !== ""
                 && req.headers.token)
         await movieController.createMovie(req, res);
 });

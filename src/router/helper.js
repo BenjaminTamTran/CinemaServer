@@ -2,7 +2,7 @@ const notFoundEmailError = (res) => {
     res.status(404).json({
         success: false,
         message: 'Không tìm thấy email',
-        data: {}
+        data: null
     })
 };
 
@@ -10,7 +10,7 @@ const emailUsedError = (res) => {
     res.status(200).json({
         success: false,
         message: 'Email này đã được sử dụng',
-        data: {}
+        data: null
     })
 };
 
@@ -28,8 +28,8 @@ const registerSuccess = (res, token, account) => {
 const notExistsEmailError = (res) => {
     res.status(404).json({
         success: false,
-        message: 'Không tìm thấy tài khoản đăng nhập, email không có sẵn',
-        error: 'Email không có sẵn'
+        message: 'Không tìm thấy tài khoản đăng nhập, email không tồn tại',
+        data: null
     })
 };
 
@@ -37,7 +37,7 @@ const passwordNotMatchError = (res) => {
     res.status(200).json({
         success: false,
         message: 'Đăng nhập không thành công, mật khẩu không chính xác',
-        data: {}
+        data: null
     })
 };
 
@@ -55,8 +55,8 @@ const loginSucess = (res, token, account) => {
 const unauthorizedError = (res) => {
     return res.status(403).json({
         success: false,
-        message: 'Không thể tạo phim',
-        error: "Cần đăng nhập để tiếp tục"
+        message: 'Không thể thực hiện, cần đăng nhập để tiếp tục',
+        data: null
     })
 };
 
@@ -127,7 +127,7 @@ const movieNotFound = (res, error) => {
 };
 
 const noMovieFoundError = (res) => {
-    res.status(200).json({
+    res.status(404).json({
         success: false,
         message: 'Không tìm thấy phim',
         data: {}
