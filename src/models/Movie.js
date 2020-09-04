@@ -1,28 +1,28 @@
 var mongoose = require('mongoose');
 const movieSchema = new mongoose.Schema({
-    imagePath: {
+    // imagePath: {
+    //     type: String,
+    //     default: 'https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png?format=jpg&quality=90&v=1530129081',
+    //     require: true
+    // },
+    image: {
         type: String,
         default: 'https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png?format=jpg&quality=90&v=1530129081',
         require: true
     },
-    imageName: {
-        type: String,
-        default: 'your_movie.jpg',
-        require: true
-    },
-    title: {
+    name: {
         type: String,
         default: 'Cinema movie',
         require: true
     },
-    startDate: {
+    showDate: {
         type: Number,
-        default: Date.now,
+        default: Date.now(),
         require: true
     },
-    endDate: {
+    createDate: {
         type: Number,
-        default: Date.now,
+        default: Date.now(),
         require: true
     },
     description: {
@@ -31,6 +31,11 @@ const movieSchema = new mongoose.Schema({
         require: true
     },
     userID: {
+        type: String,
+        default: null,
+        require: false
+    },
+    type: {
         type: String,
         default: null,
         require: false
