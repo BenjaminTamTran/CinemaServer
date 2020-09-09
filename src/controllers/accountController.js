@@ -7,6 +7,8 @@ var helper = require('../router/helper');
 const createAccount = async (req, res) => {
     var account = new Account({
         // _id: mongoose.Types.ObjectId,
+        username: constant.defaultUserName,
+        avatar: constant.defaultUserAvatar,
         email: req.body.email,
         password: req.body.password
     });
@@ -30,6 +32,21 @@ const createAccount = async (req, res) => {
             helper.serverError(res)
         })
     }
+};
+
+const updateInformation = async (req, res) => {
+    console.log(`req body: ${JSON.stringify(req.body, null, 2)}`);
+    const id = req.body.userID;
+    const updateObject = req.body.content;
+    Account.updateOne({ _id: id }, { $set: updateObject })
+        .exec().then(() => {
+        Account.findById(id).then((updatedInformation) => {
+            helper.updatePersonalInfSuccess(res, updatedInformation);
+        })
+    }).catch((error) => {
+        console.log(`update profile error: ${JSON.stringify(error, null, 2)}`);
+        helper.serverError(res)
+    })
 };
 
 const signin = async (req, res) => {
@@ -69,8 +86,24 @@ const signin = async (req, res) => {
     }
 };
 
+const getUserInf = async (req, res) => {
+    const userID = req.body.userID;
+    try {
+        Account.findById(userID).then((account) => {
+            helper.getProfileSuccessfull(res, account)
+        }).catch((error) => {
+            helper.notFoundAccountError(res, error)
+        });
+    } catch (error) {
+        console.log(`Find user profile error: ${JSON.stringify(error, null, 2)}`);
+        helper.serverError(res)
+    }
+};
+
 module.exports = {
     createAccount,
-    signin
+    updateInformation,
+    signin,
+    getUserInf
 };
 

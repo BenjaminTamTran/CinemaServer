@@ -51,6 +51,7 @@ const updateMovie = (req, res) => {
 
 const deleteMovie = (req, res) => {
     const id = req.params.id;
+    console.log(`Process - remove the movie have id - ${id}`);
     Movie.findByIdAndRemove(id)
         .exec()
         .then(() =>
@@ -60,7 +61,18 @@ const deleteMovie = (req, res) => {
         )
 };
 
-const getListMovie = async (req, res) => {
+const demandDeleteMovie = (req, res) => {
+    const id = req.body.id;
+    Movie.findOne({_id: id})
+        .exec()
+        .then(() =>
+            helper.demandRemoveMovieSuccess(res, id)
+        ).catch((error) =>
+            helper.noMovieFoundError(res, error)
+        )
+};
+
+const getMovieList = async (req, res) => {
     const movies = await Movie.find();
     if (movies) {
         helper.getMovieList(res, movies);
@@ -82,15 +94,29 @@ const getSaveMovie = (req, res) => {
 
 };
 
-const getCreatedMovie = (req, res) => {
-
+const getCreatedMovie = async (req, res) => {
+    const userID = req.body.userID;
+    // console.log(`userID: ${userID}`);
+    try {
+        const movies = await Movie.find({userID: userID});
+        if (movies) {
+            helper.getUserMovieListSuccess(res, movies);
+        } else {
+            console.log(`Error while fetching user movies - ${JSON.stringify(error, null, 2)}`);
+            helper.noMovieFoundError(res);
+        }
+    } catch (e) {
+        console.log(`Error while get movie list of user - ${JSON.stringify(e.message, null, 2)}`);
+        helper.serverError(res);
+    }
 };
 
 module.exports = {
   createMovie,
   updateMovie,
   deleteMovie,
-  getListMovie,
+  demandDeleteMovie,
+  getMovieList,
   getMovieDetail,
   getSaveMovie,
   getCreatedMovie

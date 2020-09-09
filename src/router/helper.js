@@ -6,6 +6,22 @@ const notFoundEmailError = (res) => {
     })
 };
 
+const notFoundAccountError = (res) => {
+    res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy tài khoản',
+        data: null
+    })
+};
+
+const getProfileSuccessfull = (res, account) => {
+    res.status(404).json({
+        success: true,
+        message: 'Lấy thông tin tài khoản thành công',
+        data: account
+    })
+};
+
 const emailUsedError = (res) => {
     res.status(200).json({
         success: false,
@@ -22,6 +38,14 @@ const registerSuccess = (res, token, account) => {
             token: token,
             Account: account
         }
+    })
+};
+
+const updatePersonalInfSuccess = (res, updatedInformation) => {
+    return res.status(200).json({
+        success: true,
+        message: 'Tài khoản cập nhật thành công',
+        data: updatedInformation
     })
 };
 
@@ -150,6 +174,22 @@ const removeMovieSuccess = (res) => {
     })
 };
 
+const demandRemoveMovieSuccess = (res, id) => {
+    res.status(200).json({
+        success: true,
+        message: 'Đã gửi yêu cầu xóa phim',
+        data: {id}
+    })
+};
+
+const getUserMovieListSuccess = (res, movies) => {
+    res.status(200).json({
+        success: true,
+        message: 'Lấy danh sách phim của tài khoản thành công',
+        data: movies
+    })
+};
+
 const serverError = (res) => {
     res.status(500).json({
         success: false,
@@ -160,9 +200,12 @@ const serverError = (res) => {
 
 module.exports = {
     notFoundEmailError,
+    notFoundAccountError,
+    getProfileSuccessfull,
     emailUsedError,
     passwordNotMatchError,
     registerSuccess,
+    updatePersonalInfSuccess,
     notExistsEmailError,
     loginSucess,
     unauthorizedError,
@@ -177,5 +220,7 @@ module.exports = {
     movieNotFound,
     updateMovieSuccess,
     removeMovieSuccess,
+    demandRemoveMovieSuccess,
+    getUserMovieListSuccess,
     serverError,
 };
