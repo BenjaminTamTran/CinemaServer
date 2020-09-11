@@ -88,8 +88,9 @@ const signin = async (req, res) => {
 
 const getUserInf = async (req, res) => {
     const userID = req.body.userID;
+    console.log(userID);
     try {
-        Account.findById(userID).then((account) => {
+        Account.findById(userID.userID).then((account) => {
             helper.getProfileSuccessfull(res, account)
         }).catch((error) => {
             helper.notFoundAccountError(res, error)

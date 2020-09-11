@@ -96,7 +96,7 @@ const getSaveMovie = (req, res) => {
 
 const getCreatedMovie = async (req, res) => {
     const userID = req.body.userID;
-    // console.log(`userID: ${userID}`);
+    console.log(`userID: ${userID}`);
     try {
         const movies = await Movie.find({userID: userID});
         if (movies) {
