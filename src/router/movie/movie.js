@@ -1,15 +1,16 @@
 var express = require('express');
 var movieController = require('../../controllers/movieController');
-var multipart = require('connect-multiparty');
-var multipartMiddleware = multipart();
+// var multipart = require('connect-multiparty');
+// var multipartMiddleware = multipart();
 var helper = require('../helper');
 var constant = require('../../config/constant');
-
 const router = express.Router();
-router.get(`/`, movieController.getMovieList); // lấy danh sách các bộ phim
-router.get(`/:id`, movieController.getMovieDetail); // lấy thông tin chi tiết của bộ phim
-router.get(`/list/saved`, movieController.getSaveMovie); // lấy danh sách các bộ phim đã lưu của user
 
+router.get(`/`, movieController.getMovieList); // lấy danh sách các bộ phim
+
+router.get(`/:id`, movieController.getMovieDetail); // lấy thông tin chi tiết của bộ phim thông qua param url
+
+router.get(`/list/saved`, movieController.getSaveMovie); // lấy danh sách các bộ phim đã lưu của user
 
 // lấy danh sách các bộ phim đã tạo của user
 router.post(`/list/created/`, async function (req, res) {

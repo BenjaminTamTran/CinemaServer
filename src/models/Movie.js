@@ -35,6 +35,11 @@ const movieSchema = new mongoose.Schema({
         default: null,
         require: false
     },
+    author: {
+        type: String,
+        default: '',
+        require: false
+    },
     type: {
         type: String,
         default: null,

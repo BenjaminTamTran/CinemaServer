@@ -1,4 +1,5 @@
 var Movie = require('../models/Movie');
+var Account = require('../models/Account');
 var helper = require('../router/helper');
 
 const createMovie = async (req, res) => {
@@ -9,6 +10,9 @@ const createMovie = async (req, res) => {
     const endDate = req.body.type === 'ADD_MOVIE_REQUEST' ? req.body.params.endDate : req.body.endDate;
     const userID = req.body.type === 'ADD_MOVIE_REQUEST' ? req.body.params.userID : req.body.userID;
     const type = req.body.type === 'ADD_MOVIE_REQUEST' ? req.body.params.type : req.body.type;
+    // get author name
+    var author = await Account.findById(userID);
+    //
     var movie = new Movie({
         image: image,
         name: name,
@@ -16,6 +20,7 @@ const createMovie = async (req, res) => {
         endDate: endDate,
         description: description,
         userID: userID,
+        author: author.username,
         type: type,
     });
     try {
