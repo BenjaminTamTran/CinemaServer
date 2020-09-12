@@ -16,7 +16,7 @@ const createMovie = async (req, res) => {
         image: image,
         name: name,
         createDate: Date.now(),
-        showDate: showDate,
+        showDate: new Date(showDate).getTime(),
         description: description,
         userID: userID,
         author: author.username,
