@@ -6,8 +6,7 @@ const createMovie = async (req, res) => {
     const image = req.body.type === 'ADD_MOVIE_REQUEST' ? req.body.params.image : req.body.image;
     const name = req.body.type === 'ADD_MOVIE_REQUEST' ? req.body.params.name : req.body.name;
     const description = req.body.type === 'ADD_MOVIE_REQUEST' ? req.body.params.description : req.body.description;
-    const startDate = req.body.type === 'ADD_MOVIE_REQUEST' ? req.body.params.startDate : req.body.startDate;
-    const endDate = req.body.type === 'ADD_MOVIE_REQUEST' ? req.body.params.endDate : req.body.endDate;
+    const showDate= req.body.type === 'ADD_MOVIE_REQUEST' ? req.body.params.showDate : req.body.showDate;
     const userID = req.body.type === 'ADD_MOVIE_REQUEST' ? req.body.params.userID : req.body.userID;
     const type = req.body.type === 'ADD_MOVIE_REQUEST' ? req.body.params.type : req.body.type;
     // get author name
@@ -16,8 +15,8 @@ const createMovie = async (req, res) => {
     var movie = new Movie({
         image: image,
         name: name,
-        startDate: startDate,
-        endDate: endDate,
+        createDate: Date.now(),
+        showDate: showDate,
         description: description,
         userID: userID,
         author: author.username,
