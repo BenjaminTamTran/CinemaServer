@@ -12,7 +12,9 @@ const createMovie = async (req, res) => {
     // get author name
     var author = await Account.findById(userID);
     //
+    var id = `${name.replace(' ', '-')}-${Math.floor(Math.random() * 10000)}`;
     var movie = new Movie({
+        _id: `${id}`,
         image: image,
         name: name,
         createDate: Date.now(),

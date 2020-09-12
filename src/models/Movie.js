@@ -5,6 +5,11 @@ const movieSchema = new mongoose.Schema({
     //     default: 'https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png?format=jpg&quality=90&v=1530129081',
     //     require: true
     // },
+    _id: {
+        type: String,
+        default: `${Math.floor(Math.random() * 1000)}`,
+        require: true
+    },
     image: {
         type: String,
         default: 'https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png?format=jpg&quality=90&v=1530129081',
