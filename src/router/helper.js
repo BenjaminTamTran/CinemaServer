@@ -6,6 +6,14 @@ const notFoundEmailError = (res) => {
     })
 };
 
+const notFoundDataError = (res) => {
+    res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy dữ liệu',
+        data: null
+    })
+};
+
 const notFoundAccountError = (res) => {
     res.status(404).json({
         success: false,
@@ -46,6 +54,22 @@ const updatePersonalInfSuccess = (res, updatedInformation) => {
         success: true,
         message: 'Tài khoản cập nhật thành công',
         data: updatedInformation
+    })
+};
+
+const changePasswordSuccess = (res, updatedAccount) => {
+    return res.status(200).json({
+        success: true,
+        message: 'Mật khẩu cập nhật thành công',
+        data: updatedAccount
+    })
+};
+
+const oldPasswordNotMatch = (res) => {
+    return res.status(404).json({
+        success: false,
+        message: 'Mật khẩu cũ không trùng khớp',
+        data: null
     })
 };
 
@@ -200,12 +224,15 @@ const serverError = (res) => {
 
 module.exports = {
     notFoundEmailError,
+    notFoundDataError,
     notFoundAccountError,
     getProfileSuccessfull,
     emailUsedError,
     passwordNotMatchError,
     registerSuccess,
     updatePersonalInfSuccess,
+    changePasswordSuccess,
+    oldPasswordNotMatch,
     notExistsEmailError,
     loginSucess,
     unauthorizedError,

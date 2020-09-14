@@ -33,4 +33,13 @@ router.post(`/signin`, async function (req, res) {
         await accountController.signin(req, res)
 });
 
+router.post(`/profile/auth/update`, async function (req, res) {
+    if (!req.headers.token)
+        helper.unauthorizedError(res);
+    else if (!req.body.newPassword || req.body.newPassword === "")
+        helper.notFoundDataError(res);
+    else
+        await accountController.changePassword(req, res)
+});
+
 module.exports = router;

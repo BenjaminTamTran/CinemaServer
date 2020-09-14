@@ -88,9 +88,8 @@ const signin = async (req, res) => {
 
 const getUserInf = async (req, res) => {
     const userID = req.body.userID;
-    console.log(userID);
     try {
-        Account.findById(userID).then((account) => {
+        Account.findById(userID.userID).then((account) => {
             helper.getProfileSuccessfull(res, account)
         }).catch((error) => {
             helper.notFoundAccountError(res, error)
@@ -101,9 +100,33 @@ const getUserInf = async (req, res) => {
     }
 };
 
+const changePassword = async (req, res) => {
+    const userID = req.body.userID;
+    console.log(`user id: ${userID}`);
+    console.log(`req body: ${JSON.stringify(req.body, null, 2)}`);
+    var newPassword = await bcrypt.hash(req.body.newPassword, 3);
+    var oldPassword = req.body.oldPassword;
+    Account.findById(userID).then(async (account) => {
+        bcrypt.compare(oldPassword, account.password, (err, isMatch) => {
+            if (!isMatch) {
+                helper.oldPasswordNotMatch(res);
+            } else {
+                try {
+                    Account.updateOne({_id: userID}, {$set: {password: newPassword}}).exec().then(() => {
+                        helper.changePasswordSuccess(res);
+                    })
+                } catch (error) {
+                    helper.serverError(res);
+                }
+            }
+        });
+    });
+};
+
 module.exports = {
     createAccount,
     updateInformation,
+    changePassword,
     signin,
     getUserInf
 };
