@@ -1,4 +1,6 @@
 var mongoose = require('mongoose');
+var moment = require('moment');
+
 const movieSchema = new mongoose.Schema({
     // imagePath: {
     //     type: String,
@@ -21,13 +23,13 @@ const movieSchema = new mongoose.Schema({
         require: true
     },
     showDate: {
-        type: Number,
-        default: Date.now(),
+        type: String,
+        default: moment(Date.now()).toDate().toDateString(),
         require: true
     },
     createDate: {
-        type: Number,
-        default: Date.now(),
+        type: String,
+        default: moment(Date.now()).toDate().toDateString(),
         require: true
     },
     description: {
@@ -42,8 +44,7 @@ const movieSchema = new mongoose.Schema({
     },
     author: {
         type: String,
-        default: '',
-        require: false
+        default: ''
     },
     type: {
         type: String,
@@ -51,5 +52,7 @@ const movieSchema = new mongoose.Schema({
         require: false
     }
 });
+
+movieSchema.index({ "$**": "text" });
 
 module.exports = mongoose.model('movie', movieSchema);

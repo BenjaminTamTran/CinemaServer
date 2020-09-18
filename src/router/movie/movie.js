@@ -21,6 +21,9 @@ router.post(`/list/created/`, async function (req, res) {
     await movieController.getCreatedMovie(req, res);
 });
 
+// lấy danh sách các bộ phim tìm kiếm
+router.post(`/search`, movieController.getSearchMovies);
+
 // Thêm một phim mới
 router.post(`/create`, async function (req, res) {
     // Because of redux-saga so if req wasnt from postman, it will have the 'type' field

@@ -1,6 +1,9 @@
+// import stringHelper from "../shared/stringHelper";
+
 var Movie = require('../models/Movie');
 var Account = require('../models/Account');
 var helper = require('../router/helper');
+var moment = require('moment');
 
 const createMovie = async (req, res) => {
     const image = req.body.type === 'ADD_MOVIE_REQUEST' ? req.body.params.image : req.body.image;
@@ -17,8 +20,8 @@ const createMovie = async (req, res) => {
         _id: `${id}`,
         image: image,
         name: name,
-        createDate: Date.now(),
-        showDate: new Date(showDate).getTime(),
+        createDate: moment(Date.now()).toDate().toDateString(),
+        showDate: showDate,
         description: description,
         userID: userID,
         author: author.username,
@@ -87,6 +90,94 @@ const getMovieList = async (req, res) => {
     }
 };
 
+const getSearchMovies = async (req, res) => {
+    const searchKey = req.body.keyword;
+    const movieType = req.body.movieType;
+    const createdDate = req.body.createdDate;
+    const showDate = req.body.showDate;
+
+    console.log(`searchKey: ${searchKey}`);
+    console.log(`movieType: ${movieType}`);
+    console.log(`createdDate: ${createdDate}`);
+    console.log(`showDate: ${showDate}`);
+
+    // var currentTime = stringHelper.toDateString(Date.now());
+    let query = {};
+
+    if (searchKey && searchKey !== '') {
+        query = {
+            ...query,
+            $text: {
+                $search: searchKey,
+            }
+        }
+    }
+
+    if (searchKey && searchKey === '') {
+        query = {
+            ...query,
+        }
+    }
+
+    if (movieType && movieType !== "Tất cả phim") {
+        query = {
+            ...query,
+            type: movieType,
+        }
+    }
+
+    if (movieType && movieType === 'Tất cả phim') {
+        query = {
+            ...query
+        }
+    }
+
+    if (createdDate) {
+        query = {
+            ...query,
+            createDate: createdDate
+        }
+    }
+
+    if (showDate) {
+        query = {
+            ...query,
+            showDate: showDate
+        }
+    }
+
+    const movies = await Movie.find(query);
+
+    // if (movies) {
+    //     if (searchKey !== '') {
+    //         if (movieType === 'Tất cả phim' && createdDate === currentTime && showDate === currentTime) {
+    //             // Có từ khóa, tất cả filter ở trang thái mặc định
+    //             let results = movies.filter(movie => (movie.name.includes(searchKey) || movie.author.includes(searchKey) || movie.description.includes(searchKey)));
+    //             helper.getMovieList(res, results);
+    //         } else {
+    //             // có từ khóa, một hoặc nhiều filter được thay đổi
+    //             let results = movies.filter(movie => (movie.name.includes(searchKey) || movie.author.includes(searchKey) || movie.description.includes(searchKey) ||
+    //                                                 movie.type === movieType || movie.showDate === showDate || movie.createDate === createdDate));
+    //             helper.getMovieList(res, results);
+    //         }
+    //     } else {
+    //         // Không tìm kiếm theo từ khóa, tìm kiếm theo filter
+    //         if (movieType === 'Tất cả phim') {
+    //             console.log(`all + filter`)
+    //             let results = movies.filter(movie => (toDateString(movie.showDate) === showDate || toDateString(movie.createDate) === createdDate));
+    //             helper.getMovieList(res, results);
+    //         } else {
+    //             console.log(`type`)
+    //             let results = movies.filter(movie => (movie.type === movieType || toDateString(movie.showDate) === showDate || toDateString(movie.createDate) === createdDate));
+    //             helper.getMovieList(res, results);
+    //         }
+    //     }
+    // } else {
+    //     helper.noMovieFoundError(res);
+    // }
+    helper.getMovieList(res, movies);
+};
+
 const getMovieDetail = (req, res) => {
     const id = req.params.id;
     Movie.findById(id).then((movie) => {
@@ -123,6 +214,7 @@ module.exports = {
   deleteMovie,
   demandDeleteMovie,
   getMovieList,
+  getSearchMovies,
   getMovieDetail,
   getSaveMovie,
   getCreatedMovie

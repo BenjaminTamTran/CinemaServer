@@ -14,5 +14,5 @@ function removeWeirdCharacter (str) {
 }
 
 module.exports = {
-    removeWeirdCharacter
+    removeWeirdCharacter,
 };
