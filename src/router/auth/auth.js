@@ -42,4 +42,20 @@ router.post(`/profile/auth/update`, async function (req, res) {
         await accountController.changePassword(req, res)
 });
 
+router.post(`/profile/auth/verify`, async function (req, res) {
+    if (!req.body.email || req.body.enail === "")
+        helper.notFoundDataError(res);
+    else
+        await accountController.checkEmailExist(req, res)
+});
+
+router.post(`/profile/auth/reset`, async function (req, res) {
+    if (!req.body.email || req.body.enail === "")
+        helper.notFoundDataError(res);
+    if (!req.body.newPassword || req.body.newPassword === "")
+        helper.notFoundDataError(res);
+    else
+        await accountController.resetPassWord(req, res)
+});
+
 module.exports = router;

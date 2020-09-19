@@ -65,6 +65,22 @@ const changePasswordSuccess = (res, updatedAccount) => {
     })
 };
 
+const resetPasswordSuccess = (res, updatedAccount) => {
+    return res.status(200).json({
+        success: true,
+        message: 'Mật khẩu reset thành công',
+        data: updatedAccount
+    })
+};
+
+const verifyEmailExist = (res, account) => {
+    return res.status(200).json({
+        success: true,
+        message: 'Tài khoản có tồn tại',
+        data: account
+    })
+};
+
 const oldPasswordNotMatch = (res) => {
     return res.status(404).json({
         success: false,
@@ -232,6 +248,8 @@ module.exports = {
     registerSuccess,
     updatePersonalInfSuccess,
     changePasswordSuccess,
+    resetPasswordSuccess,
+    verifyEmailExist,
     oldPasswordNotMatch,
     notExistsEmailError,
     loginSucess,

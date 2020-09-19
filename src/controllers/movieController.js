@@ -21,7 +21,7 @@ const createMovie = async (req, res) => {
         image: image,
         name: name,
         createDate: moment(Date.now()).toDate().toDateString(),
-        showDate: showDate,
+        showDate: moment(showDate).toDate().toDateString(),
         description: description,
         userID: userID,
         author: author.username,
@@ -90,8 +90,8 @@ const getMovieList = async (req, res) => {
     }
 };
 
-const getSearchMovies = async (req, res) => {
-    const searchKey = req.body.keyword;
+const getSearchingMovies = async (req, res) => {
+    const searchKey = req.body.keyword ? req.body.keyword : '';
     const movieType = req.body.movieType;
     const createdDate = req.body.createdDate;
     const showDate = req.body.showDate;
@@ -102,80 +102,70 @@ const getSearchMovies = async (req, res) => {
     console.log(`showDate: ${showDate}`);
 
     // var currentTime = stringHelper.toDateString(Date.now());
-    let query = {};
-
-    if (searchKey && searchKey !== '') {
-        query = {
-            ...query,
-            $text: {
-                $search: searchKey,
-            }
-        }
-    }
-
-    if (searchKey && searchKey === '') {
-        query = {
-            ...query,
-        }
-    }
-
-    if (movieType && movieType !== "Tất cả phim") {
-        query = {
-            ...query,
-            type: movieType,
-        }
-    }
-
-    if (movieType && movieType === 'Tất cả phim') {
-        query = {
-            ...query
-        }
-    }
-
-    if (createdDate) {
-        query = {
-            ...query,
-            createDate: createdDate
-        }
-    }
-
-    if (showDate) {
-        query = {
-            ...query,
-            showDate: showDate
-        }
-    }
-
-    const movies = await Movie.find(query);
-
-    // if (movies) {
-    //     if (searchKey !== '') {
-    //         if (movieType === 'Tất cả phim' && createdDate === currentTime && showDate === currentTime) {
-    //             // Có từ khóa, tất cả filter ở trang thái mặc định
-    //             let results = movies.filter(movie => (movie.name.includes(searchKey) || movie.author.includes(searchKey) || movie.description.includes(searchKey)));
-    //             helper.getMovieList(res, results);
-    //         } else {
-    //             // có từ khóa, một hoặc nhiều filter được thay đổi
-    //             let results = movies.filter(movie => (movie.name.includes(searchKey) || movie.author.includes(searchKey) || movie.description.includes(searchKey) ||
-    //                                                 movie.type === movieType || movie.showDate === showDate || movie.createDate === createdDate));
-    //             helper.getMovieList(res, results);
-    //         }
-    //     } else {
-    //         // Không tìm kiếm theo từ khóa, tìm kiếm theo filter
-    //         if (movieType === 'Tất cả phim') {
-    //             console.log(`all + filter`)
-    //             let results = movies.filter(movie => (toDateString(movie.showDate) === showDate || toDateString(movie.createDate) === createdDate));
-    //             helper.getMovieList(res, results);
-    //         } else {
-    //             console.log(`type`)
-    //             let results = movies.filter(movie => (movie.type === movieType || toDateString(movie.showDate) === showDate || toDateString(movie.createDate) === createdDate));
-    //             helper.getMovieList(res, results);
+    // let query = {};
+    //
+    // if (searchKey && searchKey !== '') {
+    //     query = {
+    //         ...query,
+    //         $text: {
+    //             $search: searchKey,
     //         }
     //     }
-    // } else {
-    //     helper.noMovieFoundError(res);
     // }
-    helper.getMovieList(res, movies);
+    //
+    // if (searchKey && searchKey === '') {
+    //     query = {
+    //         ...query,
+    //     }
+    // }
+    //
+    // if (movieType && movieType !== "Tất cả phim") {
+    //     query = {
+    //         ...query,
+    //         type: movieType,
+    //     }
+    // }
+    //
+    // if (createdDate) {
+    //     query = {
+    //         ...query,
+    //         createDate: createdDate
+    //     }
+    // }
+    //
+    // if (showDate) {
+    //     query = {
+    //         ...query,
+    //         showDate: showDate
+    //     }
+    // }
+
+
+    const movies = await Movie.find();
+
+    if (movies) {
+        if (searchKey !== '') {
+            let results = movies.filter(movie => (
+                movie.name.includes(searchKey) ||
+                movie.author.includes(searchKey) ||
+                movie.description.includes(searchKey)
+            ));
+            helper.getMovieList(res, results);
+        } else {
+            movies.map(movie => console.log(`movie type: ${movie.type}`));
+            // Không tìm kiếm theo từ khóa, tìm kiếm theo filter
+            var results = [];
+
+            if (movieType !== 'Tất cả phim') {
+                results = movies.filter(movie => (movie.type === movieType));
+            }
+            else
+                results = movies.find();
+            helper.getMovieList(res, results);
+        }
+    } else {
+        helper.noMovieFoundError(res);
+    }
 };
 
 const getMovieDetail = (req, res) => {
@@ -214,7 +204,7 @@ module.exports = {
   deleteMovie,
   demandDeleteMovie,
   getMovieList,
-  getSearchMovies,
+  getSearchingMovies,
   getMovieDetail,
   getSaveMovie,
   getCreatedMovie

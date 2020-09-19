@@ -113,7 +113,7 @@ const changePassword = async (req, res) => {
             } else {
                 try {
                     Account.updateOne({_id: userID}, {$set: {password: newPassword}}).exec().then(() => {
-                        helper.changePasswordSuccess(res);
+                        helper.changePasswordSuccess(res, account);
                     })
                 } catch (error) {
                     helper.serverError(res);
@@ -123,11 +123,38 @@ const changePassword = async (req, res) => {
     });
 };
 
+const checkEmailExist = (req, res) => {
+    const email = req.body.email;
+    Account.findOne({email: email}).then(async (account) => {
+        if (account._id) {
+            helper.verifyEmailExist(res, account)
+        }
+    })
+};
+
+const resetPassWord = async (req, res) => {
+    const email = req.body.email;
+    const newPassword = await bcrypt.hash(req.body.newPassword, 3);
+    Account.findOne({email: email}).then(async (account) => {
+        if (account._id) {
+            try {
+                Account.updateOne({_id: account._id}, {$set: {password: newPassword}}).exec().then(() => {
+                    helper.resetPasswordSuccess(res, account);
+                })
+            } catch (e) {
+                helper.serverError(res);
+            }
+        }
+    })
+};
+
 module.exports = {
     createAccount,
     updateInformation,
     changePassword,
     signin,
-    getUserInf
+    getUserInf,
+    checkEmailExist,
+    resetPassWord
 };
 

@@ -22,7 +22,7 @@ router.post(`/list/created/`, async function (req, res) {
 });
 
 // lấy danh sách các bộ phim tìm kiếm
-router.post(`/search`, movieController.getSearchMovies);
+router.post(`/search`, movieController.getSearchingMovies);
 
 // Thêm một phim mới
 router.post(`/create`, async function (req, res) {
